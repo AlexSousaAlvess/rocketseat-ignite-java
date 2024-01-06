@@ -12,7 +12,7 @@ public class CreateCompanyUseCase {
     @Autowired
     public CompanyRepository companyRepository;
 
-    private CompanyEntity execute(CompanyEntity companyEntity){
+    public CompanyEntity execute(CompanyEntity companyEntity){
         this.companyRepository.
         findByUsernameOrEmail(companyEntity.getUsername(), companyEntity.getEmail())
         .ifPresent((user) -> {
