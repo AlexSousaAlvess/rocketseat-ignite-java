@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 
 @Service
 public class JWTProvider {
@@ -17,8 +18,8 @@ public class JWTProvider {
         try{
             var subject = JWT.require(algorithm).build().verify(token).getSubject();
             return subject;
-        }catch(Exception e){
-            e.printStackTrace();
+        }catch(JWTVerificationException ex){
+            ex.printStackTrace();
             return "";
         }
     }

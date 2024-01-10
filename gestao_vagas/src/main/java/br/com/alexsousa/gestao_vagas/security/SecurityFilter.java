@@ -37,6 +37,8 @@ public class SecurityFilter extends OncePerRequestFilter{
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     return;
                 }
+                System.out.println("Cheguei aqui");
+                System.out.println(subjectToken);
                 request.setAttribute("company_id", subjectToken);
                 UsernamePasswordAuthenticationToken auth = 
                 new UsernamePasswordAuthenticationToken(
