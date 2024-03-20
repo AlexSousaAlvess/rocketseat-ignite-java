@@ -6,6 +6,7 @@ import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
@@ -29,22 +30,27 @@ public class SecurityFilter extends OncePerRequestFilter{
         HttpServletResponse response, 
         FilterChain filterChain
         ) throws ServletException, IOException {
-            SecurityContextHolder.getContext().setAuthentication(null);
+            // SecurityContextHolder.getContext().setAuthentication(null);
             String header = request.getHeader("Authorization");
             if(request.getRequestURI().startsWith("/company")){
                 if(header != null){
-                    var subjectToken = this.jwtProvider.validateToken(header);
-                    if(subjectToken.isEmpty()){
+                    var token = this.jwtProvider.validateToken(header);
+                    if(token == null){
                         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                         return;
                     }
-                    request.setAttribute("company_id", subjectToken);
+
+                    var roles = token.getClaim("roles").asList(Object.class);
+                    var grants = roles.stream()
+                            .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toString().toUpperCase()))
+                            .toList();
+
+                    request.setAttribute("company_id", token.getSubject());
                     UsernamePasswordAuthenticationToken auth = 
                     new UsernamePasswordAuthenticationToken(
-                        subjectToken, 
+                        token.getSubject(), 
                         null,
-                        Collections.emptyList()
-                    );
+                        grants);
                     SecurityContextHolder.getContext().setAuthentication(auth);
                 }
             }
