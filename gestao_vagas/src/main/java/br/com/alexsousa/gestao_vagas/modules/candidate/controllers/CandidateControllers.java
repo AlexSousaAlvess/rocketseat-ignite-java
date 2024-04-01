@@ -3,6 +3,7 @@ package br.com.alexsousa.gestao_vagas.modules.candidate.controllers;
 import java.util.List;
 import java.util.UUID;
 
+import br.com.alexsousa.gestao_vagas.modules.candidate.dto.ProfileCandidateResponseDTO;
 import br.com.alexsousa.gestao_vagas.modules.candidate.useCases.ListAllJobsByFilterUserCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -53,7 +54,19 @@ public class CandidateControllers {
     }
 
     @GetMapping("/")
-    @PreAuthorize("hasRole('CANDIDATE')") 
+    @PreAuthorize("hasRole('CANDIDATE')")
+    @Tag(name = "Candidato", description = "Informações do candidato")
+    @Operation(
+            summary = "Perfil do candidato",
+            description = "Essa função é responsável por informações do perfil do candidato"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(schema = @Schema(implementation = ProfileCandidateResponseDTO.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "user not found")
+    })
+    @SecurityRequirement(name = "jwt_auth")
     public ResponseEntity<Object> get(HttpServletRequest request){
         var idCandidate = request.getAttribute("candidate_id");
         try {

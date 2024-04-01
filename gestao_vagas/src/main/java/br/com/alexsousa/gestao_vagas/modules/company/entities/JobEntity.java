@@ -3,6 +3,7 @@ package br.com.alexsousa.gestao_vagas.modules.company.entities;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.Column;
@@ -28,9 +29,13 @@ public class JobEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Schema(example = "Vaga para design")
     private String description;
+
+    @Schema(example = "GYMPass, Plano de saúde")
     private String benefits;
 
+    @Schema(example = "Senior")
     @NotBlank(message = "Esse campo é obrigatório")
     private String level;
 
