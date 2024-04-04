@@ -1,0 +1,11 @@
+Testes Unitários
+    - função / Método
+    - Serviço / Service (UseCase)
+    - Repositório
+
+    - CreateCandidateUseCase (execute)
+
+    Testes de integração
+    - E2E
+    - Controller -> Service -> Repository
+    <- Repository <- Service <- Controller
